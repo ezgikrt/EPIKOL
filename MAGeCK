@@ -1,0 +1,38 @@
+mageck count -l /scratch/users/ekurt20/epikol_sgrna_library.txt --norm-method none --pdf-report -n MDA_AP1 --sample-label MDA_AP_R1 --fastq /scratch/users/ekurt20/epikol_data/SRR14428490_1.fastq
+
+mageck count -l /scratch/users/ekurt20/epikol_sgrna_library.txt --norm-method none --pdf-report -n MDA_AP2 --sample-label MDA_AP_R2 --fastq /scratch/users/ekurt20/epikol_data/SRR14428491_1.fastq
+
+mageck count -l /scratch/users/ekurt20/epikol_sgrna_library.txt --norm-method none --pdf-report -n MDA_AP3 --sample-label MDA_AP_R3 --fastq /scratch/users/ekurt20/epikol_data/SRR14428492_1.fastq
+
+mageck count -l /scratch/users/ekurt20/epikol_sgrna_library.txt --norm-method none --pdf-report -n MDA_EP1 --sample-label MDA_EP_R1 --fastq /scratch/users/ekurt20/epikol_data/SRR14428493_1.fastq
+
+mageck count -l /scratch/users/ekurt20/epikol_sgrna_library.txt --norm-method none --pdf-report -n MDA_EP2 --sample-label MDA_EP_R2 --fastq /scratch/users/ekurt20/epikol_data/SRR14428494_1.fastq
+
+mageck count -l /scratch/users/ekurt20/epikol_sgrna_library.txt --norm-method none --pdf-report -n MDA_EP3 --sample-label MDA_EP_R3 --fastq /scratch/users/ekurt20/epikol_data/SRR14428495_1.fastq
+awk 'NR == 1; NR > 1 {print $0 | "sort -n"}' MDA_AP1.count.txt > MDA_AP1.sorted.count.txt
+awk 'NR == 1; NR > 1 {print $0 | "sort -n"}' MDA_AP2.count.txt > MDA_AP2.sorted.count.txt
+awk 'NR == 1; NR > 1 {print $0 | "sort -n"}' MDA_AP3.count.txt > MDA_AP3.sorted.count.txt
+awk 'NR == 1; NR > 1 {print $0 | "sort -n"}' MDA_EP1.count.txt > MDA_EP1.sorted.count.txt
+awk 'NR == 1; NR > 1 {print $0 | "sort -n"}' MDA_EP2.count.txt > MDA_EP2.sorted.count.txt
+awk 'NR == 1; NR > 1 {print $0 | "sort -n"}' MDA_EP3.count.txt > MDA_EP3.sorted.count.txt
+
+
+paste MDA_AP1.sorted.count.txt MDA_AP2.sorted.count.txt MDA_AP3.sorted.count.txt > MDA_AP.megred_count.txt
+
+paste MDA_EP1.sorted.count.txt MDA_EP2.sorted.count.txt MDA_EP3.sorted.count.txt > MDA_EP.megred_count.txt
+
+paste MDA_AP.megred_count.txt MDA_EP.megred_count.txt > MDA_AP_EP_merged.countfile.txt
+
+
+awk 'BEGIN {OFS="\t"};{print $1, $2, $3, $6, $9, $12, $15, $18}' MDA_AP_EP_merged.countfile.txt > MDA_AP_EP_grouped_countfile.txt
+
+
+mageck test -k MDA_AP_EP_grouped_countfile.txt -t MDA_EP_R1,MDA_EP_R2,MDA_EP_R3 -c MDA_AP_R1,MDA_AP_R2,MDA_AP_R3 -n MDA_EPvsAP --norm-method none --pdf-report
+
+mageck test -k sum149_AP_EP_grouped_countfile.txt -t sum149_EP_R1,sum149_EP_R2,sum149_EP_R3 -c sum149_AP_R1,sum149_AP_R2,sum149_AP_R3 -n sum149_EPvsAP --norm-method none --pdf-report
+
+mageck test -k sum159_AP_EP_grouped_countfile.txt -t sum159_EP_R1,sum159_EP_R2,sum159_EP_R3 -c sum159_AP_R1,sum159_AP_R2,sum159_AP_R3 -n sum159_EPvsAP --norm-method none --pdf-report
+
+mageck test -k HMLE_AP_EP_grouped_countfile.txt -t HMLE_EP_R1,HMLE_EP_R2,HMLE_EP_R3 -c HMLE_AP_R1,HMLE_AP_R2,HMLE_AP_R3 -n HMLE_EPvsAP --norm-method none --pdf-report
+
+mageck test -k HMLE_AP_EP_grouped_countfile.txt -t HMLE_EP_R1,HMLE_EP_R2,HMLE_EP_R3 -c HMLE_AP_R1,HMLE_AP_R2,HMLE_AP_R3 -n lncap_EPvsAP --norm-method none --pdf-report
